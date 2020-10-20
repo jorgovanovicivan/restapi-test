@@ -137,4 +137,37 @@ function skloniBlokove(){
                 }
                 break;
             case "put":
+            skloniBlokove();
+            if($("input[name=odabir_tabele]:checked").length==0){
+                  
+                    document.getElementById(nizBlokova[6]).innerHTML="Morate odabrati tabelu za manipulaciju";
+                    document.getElementById(nizBlokova[6]).style.display="block";
+                }else{
+                    var tabela = $("input[name=odabir_tabele]:checked")[0].id;
+                    if(tabela=="radio_kategorija"){
+                      
+                        document.getElementById(nizBlokova[4]).style.display="block";
+                    }else if(tabela=="radio_novosti"){
+                        
+                        document.getElementById(nizBlokova[5]).style.display="block";
+                    }
+                }
+                break;
+            case "delete":
+            
+                skloniBlokove();
+                if($("input[name=odabir_tabele]:checked").length==0){
+                    
+                    document.getElementById(nizBlokova[6]).innerHTML="Morate odabrati tabelu za manipulaciju";
+                    document.getElementById(nizBlokova[6]).style.display="block";
+                }else{
+                    
+                    var tabela = $("input[name=odabir_tabele]:checked")[0].id;
+                    document.getElementById(nizBlokova[3]).style.display="block";
+                }
+                break;        
+            default:
+                break;
+        }
+    }
 </script>
