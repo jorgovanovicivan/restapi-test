@@ -170,4 +170,135 @@ function skloniBlokove(){
                 break;
         }
     }
+    function resetHTTP(){
+        skloniBlokove();
+        $("input[name=http_zahtev]").prop('checked', false);
+
+    }
+    function posaljiZahtev(){
+        if($("input[name=odabir_tabele]:checked").length!=0 && $("input[name=http_zahtev]:checked").length!=0){
+            var tabela = $("input[name=odabir_tabele]:checked")[0].id;
+            switch ( $("input[name=http_zahtev]:checked")[0].id){
+                case "get":
+                    if(tabela=="radio_novosti"){
+                        $.getJSON("http://localhost:8080/rest/rest/novosti", function(data){
+                            document.getElementById("get_odgovor").innerHTML = JSON.stringify(data,null,2);
+                        });
+                    }else{
+                        $.getJSON("http://localhost:8080/rest/rest/kategorije", function(data){
+                            document.getElementById("get_odgovor").innerHTML = JSON.stringify(data,null,2);
+                        });
+                    }
+                    break;
+                case "post":
+                    if(tabela=="radio_novosti"){
+                        var values = {
+                            "naslov": $("input[name=naslov_novosti]").val(),
+                            "tekst":$("#tekst_novosti").val(),
+                            "kategorija_id": parseInt($("#kategorija_odabir").val())
+                        };
+                        console.log(values);
+                        $.post("http://localhost:8080/rest/rest/novosti", JSON.stringify(values),function(data){
+                            alert("Odgovor od servera> "+data['poruka']);
+                        });
+                    }else{
+                        var values ={
+                            "kategorija": $("input[name=kategorija_naziv]").val(),
+                        }
+                        console.log(values);
+                        $.post("http://localhost:8080/rest/rest/kategorije", JSON.stringify(values),function(data){
+                            alert("Odgovor od servera> "+data['poruka']);
+                        });
+                        
+                    }
+                    break;
+                case "put":
+                if(tabela=="radio_novosti"){
+                        var values1 = {
+                            "naslov": $("input[name=naslov_novosti_put]").val(),
+                            "tekst":$("#tekst_novosti_put").val(),
+                            "kategorija_id": parseInt($("#kategorija_odabir_put").val())
+                        };
+                        var id= $("input[name=id_novosti]").val();
+                        var url1="http://localhost:8080/rest/rest/novosti/"+id;
+                        console.log(values1);
+                        console.log(id);
+                        console.log(url1);
+                        $.ajax({
+                            type:"PUT",
+                            url:url1,
+                            contentType: 'application/json',
+                            data: JSON.stringify(values1),
+                            success: function (data, textStatus, xhr) {  
+                              console.log(data);  
+                             },  
+                             error: function (xhr, textStatus, errorThrown) {  
+                             console.log('Error in Operation');  
+                            }  
+                        });
+                        
+                    }else{
+                        var values2 ={
+                            "kategorija": $("input[name=kategorija_naziv_put]").val(),
+                        }
+                        var id= $("input[name=id_kategorije]").val();
+                        var url1="http://localhost:8080/rest/rest/kategorije/"+id;
+                        console.log(values2);
+                        console.log(id);
+                        console.log(url1);
+                        $.ajax({
+                            type:"PUT",
+                            url:url1,
+                            contentType: 'application/json',
+                            data: JSON.stringify(values2),
+                            success: function (data, textStatus, xhr) {  
+                              console.log(data);  
+                             },  
+                             error: function (xhr, textStatus, errorThrown) {  
+                             console.log('Error in Operation');  
+                            }  
+                        });
+                        
+                    }
+                    break;
+                case "delete":
+                    if(tabela=="radio_novosti"){
+                        var id= $("input[name=brisanje]").val();
+                        var url2="http://localhost:8080/rest/rest/novosti/"+id;
+                        console.log(id);
+                        console.log(url2);
+                        $.ajax({
+                            type:"DELETE",
+                            url:url2,
+                            success: function (data, textStatus, xhr) {  
+                              console.log(data);  
+                             },  
+                             error: function (xhr, textStatus, errorThrown) {  
+                             console.log('Error in Operation');  
+                            }  
+                        });
+                        
+                    }else{
+                        var id= $("input[name=brisanje]").val();
+                        var url2="http://localhost:8080/rest/rest/kategorije/"+id;
+                        console.log(id);
+                        console.log(url2);
+                        $.ajax({
+                            type:"DELETE",
+                               url:url2,
+  success: function (data, textStatus, xhr) {  
+                            console.log(data);  
+                          },  
+                         error: function (xhr, textStatus, errorThrown) {  
+                             console.log('Error in Operation');  
+                      }  
+              });
+                    }
+                    break;
+                default:
+                    console.log("default");
+            }
+        }
+    }
+
 </script>
